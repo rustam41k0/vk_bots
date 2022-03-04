@@ -1,0 +1,37 @@
+import vk_api, time
+from vk_api.bot_longpoll import VkBotLongPoll, VkBotEventType
+from vk_api.longpoll import VkEventType, VkLongPoll
+import random
+from config import main_token
+
+vk_session = vk_api.VkApi(token=main_token)
+longpoll = VkLongPoll(vk_session) #210820518
+
+def sender(id, text):
+    vk_session.method('messages.send', {'chat_id': id, 'message': text, 'random_id': 0})
+
+def id_check(id):
+    id_for_scam = [390661592] #Сюда вставить айди пользователей
+    return id in id_for_scam
+
+plug = ['Ротик офф', 'Заткнись', 'Захлопнись', 'Фак офф', 'Тебе здесь не рады нигер']
+
+for event in longpoll.listen():
+    if event.type == VkEventType.MESSAGE_NEW and id_check(event.user_id):
+        if event.from_chat:  #Айди Тимура: 197931992 Ромы: 380968538  Мое: 233070793 Ильи Н: 390661592
+            msg = event.text.lower()
+            id = event.chat_id
+
+            #Для теста:
+            if msg:
+                sender(id, f'Хихи')
+
+            #Для Тимура:
+            # if 'рорезу ебут' in msg:
+            #     sender(id, f'Согласен')
+            # elif 'рорез' in msg:
+            #     sender(id, f'Твоя рореза сосет за углом')
+            # elif 'кс' in msg:
+            #     sender(id, f'Тебе надо тренироваться')
+            # else:
+            #     sender(id, plug[random.randint(0, len(plug) - 1)])
